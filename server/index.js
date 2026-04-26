@@ -34,32 +34,31 @@ const SYSTEM_COMPETITOR = `Ты — эксперт по геомаркетинг
 app.post("/api/analyze", async (req, res) => {
   const { mode, input, extraInfo } = req.body;
   if (!input?.trim()) return res.status(400).json({ error: "Введите данные" });
-  if (!process.env.ANTHROPIC_API_KEY) return res.status(500).json({ error: "API ключ не настроен" });
+  if (!process.env.OPENAI_API_KEY) return res.status(500).json({ error: "API ключ не настроен" });
 
   const userMessage = mode === "own"
     ? `Проанализируй карточку:\n${input}${extraInfo ? `\nДоп. инфо:\n${extraInfo}` : ""}`
     : `Проанализируй конкурентов:\n${input}${extraInfo ? `\nНиша:\n${extraInfo}` : ""}`;
 
   try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-        "anthropic-beta": "web-search-2025-03-05",
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
+        model: "gpt-4o-mini",
         max_tokens: 2000,
-        system: mode === "own" ? SYSTEM_OWN : SYSTEM_COMPETITOR,
-        tools: [{ type: "web_search_20250305", name: "web_search" }],
-        messages: [{ role: "user", content: userMessage }],
+        messages: [
+          { role: "system", content: mode === "own" ? SYSTEM_OWN : SYSTEM_COMPETITOR },
+          { role: "user", content: userMessage }
+        ],
       }),
     });
     const data = await response.json();
     if (!response.ok) return res.status(response.status).json({ error: data.error?.message });
-    const text = data.content.filter(b => b.type === "text").map(b => b.text).join("\n");
+    const text = data.choices[0].message.content;
     res.json({ result: text });
   } catch (err) {
     res.status(500).json({ error: err.message });
