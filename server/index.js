@@ -17,19 +17,32 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../client/build")));
 
-const SYSTEM_OWN = `Ты — эксперт по геомаркетингу и продвижению на Яндекс Картах.
-При анализе карточки оцени каждый пункт: ✅ (хорошо) / ⚠️ (частично) / ❌ (плохо):
-1. БАЗОВОЕ ЗАПОЛНЕНИЕ: название, категория, адрес, часы, телефон, сайт
-2. КОНТЕНТ: описание, фото, услуги с ценами, истории, события
-3. РЕПУТАЦИЯ: рейтинг, количество отзывов, ответы на отзывы
-4. РЕКЛАМА: платное продвижение, Яндекс Бизнес, метки
-5. РЕКОМЕНДАЦИИ: топ-5 действий прямо сейчас
-Отвечай на русском. Используй эмодзи и заголовки (##).`;
+const SYSTEM_OWN = `Ты эксперт по геомаркетингу на Яндекс Картах. Оцени карточку: БАЗОВОЕ ЗАПОЛНЕНИЕ, КОНТЕНТ, РЕПУТАЦИЯ, РЕКЛАМА, РЕКОМЕНДАЦИИ. Используй эмодзи и ##.`;
 
-const SYSTEM_COMPETITOR = `Ты — эксперт по геомаркетингу. Анализируй конкурентов на Яндекс Картах.
-Для каждого: рейтинг, отзывы, контент, реклама, сильные и слабые стороны.
-Затем: общие паттерны топа, незакрытые потребности, топ-5 идей для обгона.
-Отвечай на русском. Используй эмодзи и заголовки (##).`;
+const SYSTEM_COMPETITOR = `Ты эксперт по геомаркетингу. Анализируй конкурентов на Яндекс Картах. Дай топ-5 идей
+cat > ~/Downloads/geoapp/server/index.js << 'EOF'
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import fetch from "node-fetch";
+import path from "path";
+import { fileURLToPath } from "url";
+
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "../client/build")));
+
+const SYSTEM_OWN = `Ты эксперт по геомаркетингу на Яндекс Картах. Оцени карточку: БАЗОВОЕ ЗАПОЛНЕНИЕ, КОНТЕНТ, РЕПУТАЦИЯ, РЕКЛАМА, РЕКОМЕНДАЦИИ. Используй эмодзи и ##.`;
+
+const SYSTEM_COMPETITOR = `Ты эксперт по геомаркетингу. Анализируй конкурентов на Яндекс Картах. Дай топ-5 идей для обгона. Используй эмодзи и ##.`;
 
 app.post("/api/analyze", async (req, res) => {
   const { mode, input, extraInfo } = req.body;
