@@ -1,0 +1,12 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Manrope', sans-serif; background: #F5F3EE; min-height: 100vh; color: #1a1a1a; }
+textarea, input { font-family: 'Manrope', sans-serif; }
+textarea:focus, input:focus { outline: none; }
+.tab { cursor: pointer; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; transition: all 0.2s; border: 2px solid transparent; font-family: 'Manrope', sans-serif; }
+.tab.active { background: #FF4D2E; color: white; }
+.tab.inactive { background: white; color: #666; border-color: #e0e0e0; }
+.tab.inactive:hover { border-color: #FF4D2E; color: #FF4D2E; }
+.btn-analyze { background: #FF4D2E; color: white; border: none; padding: 14px 32px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Unbounded', sans-serif; transition: all 0.2s; width: 100%; letter-spacing: -0.3px; }
+.btn-analyze:hover:not(:disabled) { background: #e03d1f; transform: translateY(-1px); }
+.btn-analyze:disabled { opacity: 0.5; cursor: not-allowed; }
+textarea { resize: vertical; }
